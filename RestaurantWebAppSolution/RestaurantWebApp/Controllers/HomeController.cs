@@ -24,14 +24,15 @@ namespace WebAppRestaurantDemoApp.Controllers
             var objPaymentRepository = new PaymentTypeRepository();
             var objMultipleModels = new Tuple<IEnumerable<SelectListItem>, IEnumerable<SelectListItem>, IEnumerable<SelectListItem>>(
                     objCustomerRepository.GetAllCustomers(), objItemRepository.GetAllItems(), objPaymentRepository.GetAllPaymentType());
-
+            /*ModelState.Clear();*/
             return View(objMultipleModels);
         }
 
-        [HttpGet]        
+        [HttpGet]
         public JsonResult getItemUnitPrice(int itemId)
         {
             decimal UnitPrice = restaurantDBEntities.Items.Single(model => model.ItemId == itemId).ItemPrice;
+            /* ModelState.Clear();*/
             return Json(UnitPrice, JsonRequestBehavior.AllowGet);
         }
 
@@ -40,8 +41,7 @@ namespace WebAppRestaurantDemoApp.Controllers
         {
             OrderRepository objOrderRepository = new OrderRepository();
             bool isStatus = objOrderRepository.AddOrder(objOrderViewModel);
-            string SuccessMessage = String.Empty;
-
+            string SuccessMessage;
             if (isStatus)
             {
                 SuccessMessage = "Your Order Has Been Successfully Placed.";

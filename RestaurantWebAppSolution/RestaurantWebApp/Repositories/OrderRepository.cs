@@ -44,15 +44,16 @@ namespace WebAppRestaurantDemoApp.Repositories
                     restaurantDBEntities.OrderDetails.Add(objOrderDetails);
                     restaurantDBEntities.SaveChanges();
 
-                    Transaction objTransaction = new Transaction()
+                    Transaction transaction = new Transaction()
                     {
                         ItemId = item.ItemId,
                         Quantity = (-1) * item.Quantity,
-                        TranactionDate = orderViewModel.OrderDate,
-                        TypeId = 2
+                        TypeId = 2,
+                        TransactionDate = DateTime.Now,
                     };
-                    restaurantDBEntities.Transactions.Add(objTransaction);
+                    restaurantDBEntities.Transactions.Add(transaction);
                     restaurantDBEntities.SaveChanges();
+
                 }
                 return true;
             }

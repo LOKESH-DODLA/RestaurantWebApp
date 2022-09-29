@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Projects\YoutubeProjects\DatNetFramework\WebAppRestaurantDemoApp\WebAppRestaurantDemoApp\Models\RestaurantDBModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\dotnetprogs\Project\RestaurantWebApp\RestaurantWebAppSolution\RestaurantWebApp\Models\RestaurantDBModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

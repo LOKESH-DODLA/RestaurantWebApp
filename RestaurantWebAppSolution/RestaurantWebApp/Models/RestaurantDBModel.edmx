@@ -27,13 +27,6 @@
           <Property Name="PaymentTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PaymentTypeName" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="Types">
-          <Key>
-            <PropertyRef Name="TypeId" />
-          </Key>
-          <Property Name="TypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Type" Type="varchar" MaxLength="50" Nullable="false" />
-        </EntityType>
         <EntityType Name="OrderDetails">
           <Key>
             <PropertyRef Name="OrderDetailId" />
@@ -53,7 +46,7 @@
           <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PaymentTypeId" Type="int" Nullable="false" />
           <Property Name="CustomerId" Type="int" Nullable="false" />
-          <Property Name="OrderNumber" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="OrderNumber" Type="varchar" MaxLength="250" Nullable="false" />
           <Property Name="OrderDate" Type="datetime" Nullable="false" />
           <Property Name="FinalTotal" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
@@ -64,8 +57,8 @@
           <Property Name="TransactionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ItemId" Type="int" Nullable="false" />
           <Property Name="Quantity" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="TranactionDate" Type="date" Nullable="false" />
-          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="TransactionDate" Type="datetime" Nullable="false" />
+          <Property Name="TypeId" Type="int" />
         </EntityType>
         <Association Name="FK_OrderDetails_Orders">
           <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
@@ -83,7 +76,6 @@
           <EntitySet Name="Customers" EntityType="Self.Customers" Schema="Master" store:Type="Tables" />
           <EntitySet Name="Items" EntityType="Self.Items" Schema="Master" store:Type="Tables" />
           <EntitySet Name="PaymentTypes" EntityType="Self.PaymentTypes" Schema="Master" store:Type="Tables" />
-          <EntitySet Name="Types" EntityType="Self.Types" Schema="Master" store:Type="Tables" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetails" Schema="Order" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="Order" store:Type="Tables" />
           <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="Order" store:Type="Tables" />
@@ -122,22 +114,14 @@
           <EntitySet Name="Customers" EntityType="Self.Customer" />
           <EntitySet Name="Items" EntityType="Self.Item" />
           <EntitySet Name="PaymentTypes" EntityType="Self.PaymentType" />
-          <EntitySet Name="Types" EntityType="RestaurantDBModel.Type" />
           <EntitySet Name="OrderDetails" EntityType="RestaurantDBModel.OrderDetail" />
           <EntitySet Name="Orders" EntityType="RestaurantDBModel.Order" />
-          <EntitySet Name="Transactions" EntityType="RestaurantDBModel.Transaction" />
           <AssociationSet Name="FK_OrderDetails_Orders" Association="RestaurantDBModel.FK_OrderDetails_Orders">
             <End Role="Order" EntitySet="Orders" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
+          <EntitySet Name="Transactions" EntityType="RestaurantDBModel.Transaction" />
         </EntityContainer>
-        <EntityType Name="Type">
-          <Key>
-            <PropertyRef Name="TypeId" />
-          </Key>
-          <Property Name="TypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Type1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
             <PropertyRef Name="OrderDetailId" />
@@ -158,20 +142,10 @@
           <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PaymentTypeId" Type="Int32" Nullable="false" />
           <Property Name="CustomerId" Type="Int32" Nullable="false" />
-          <Property Name="OrderNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OrderNumber" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="FinalTotal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <NavigationProperty Name="OrderDetails" Relationship="RestaurantDBModel.FK_OrderDetails_Orders" FromRole="Order" ToRole="OrderDetail" />
-        </EntityType>
-        <EntityType Name="Transaction">
-          <Key>
-            <PropertyRef Name="TransactionId" />
-          </Key>
-          <Property Name="TransactionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ItemId" Type="Int32" Nullable="false" />
-          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TranactionDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="TypeId" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_OrderDetails_Orders">
           <End Type="RestaurantDBModel.Order" Role="Order" Multiplicity="1" />
@@ -185,6 +159,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="TransactionId" />
+          </Key>
+          <Property Name="TransactionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TransactionDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TypeId" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -213,14 +197,6 @@
               <MappingFragment StoreEntitySet="PaymentTypes">
                 <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
                 <ScalarProperty Name="PaymentTypeName" ColumnName="PaymentTypeName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Types">
-            <EntityTypeMapping TypeName="RestaurantDBModel.Type">
-              <MappingFragment StoreEntitySet="Types">
-                <ScalarProperty Name="Type1" ColumnName="Type" />
-                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -253,7 +229,7 @@
             <EntityTypeMapping TypeName="RestaurantDBModel.Transaction">
               <MappingFragment StoreEntitySet="Transactions">
                 <ScalarProperty Name="TypeId" ColumnName="TypeId" />
-                <ScalarProperty Name="TranactionDate" ColumnName="TranactionDate" />
+                <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="ItemId" ColumnName="ItemId" />
                 <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
